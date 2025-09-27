@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agri Supply Chain Dashboard</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- html5-qrcode for QR scanning -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+  <!-- Ethers (optional wallet hookup placeholder) -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.umd.min.js"></script>
+
+  <style>
+    body { background: #f8f9fb; }
+    .sidebar { min-height:100vh; }
+    .card-compact { padding: .75rem; }
+    .qr-preview { width:100%; height:300px; background:#000; }
+    .small-muted { font-size:0.85rem; color:#6c757d; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">AgriChain</a>
+    <div class="d-flex gap-2">
+      <button id="connectWalletBtn" class="btn btn-outline-light btn-sm">Connect Wallet</button>
+      <button id="openQrBtn" class="btn btn-light btn-sm">Scan QR</button>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <aside class="col-md-2 bg-white sidebar p-3 border-end">
+      <h6 class="mb-3">Dashboard</h6>
+      <ul class="nav flex-column">
+        <li class="nav-item"><a class="nav-link active" href="#">Overview</a></li>
+        <li class="nav-item"><a class="nav-link" href="#transfers">Transfers</a></li>
+        <li class="nav-item"><a class="nav-link" href="#participants">Participants</a></li>
+        <li class="nav-item"><a class="nav-link" href="#search-section">Search</a></li>
+      </ul>
+      <hr>
+      <div>
+        <small class="small-muted">Network: <span id="networkName">Localhost</span></small>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="col-md-10 p-4">
+      <div class="row g-3 mb-3">
+        <div class="col-md-3">
+          <div class="card card-compact shadow-sm">
+            <div class="card-body">
+              <h6>Total Batches</h6>
+              <h3 id="totalBatches">128</h3>
+              <small class="small-muted">Updated 2 mins ago</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-compact shadow-sm">
+            <div class="card-body">
+              <h6>Active Shipments</h6>
+              <h3 id="activeShip">24</h3>
+              <small class="small-muted">In transit</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-compact shadow-sm">
+            <div class="card-body">
+              <h6>Validators</h6>
+              <h3 id="validators">5</h3>
+              <small class="small-muted">Nodes online</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-compact shadow-sm">
+            <div class="card-body">
+              <h6>Scans Today</h6>
+              <h3 id="scansToday">48</h3>
+              <small class="small-muted">QR & API scans</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search / Intermediate persons -->
+      <section id="search-section" class="mb-5">
+        <div class="card shadow-sm">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Search Intermediate Persons / Transfers</h6>
+            <div class="input-group w-50">
+              <input id="searchInput" type="text" class="form-control" placeholder="Search by name, role, address, batch id...">
+              <button id="searchBtn" class="btn btn-success">Search</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table id="participantsTable" class="table table-hover table-sm">
+                <thead>
+                  <tr>
+                    <th>Participant</th>
+                    <th>Role</th>
+                    <th>Wallet / ID</th>
+                    <th>Associated Batches</th>
+                    <th>Last Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Filled by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Transfers / Timeline -->
+      <section id="transfers" class="mb-5">
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h6 class="mb-0">Recent Transfers</h6>
+          </div>
+          <div class="card-body">
+            <ul id="transferList" class="list-group list-group-flush">
+              <!-- Filled by JS -->
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- QR result / provenance -->
+      <section id="qrResult" class="mb-5">
+        <div class="card shadow-sm">
+          <div class="card-header d-flex justify-content-between">
+            <h6 class="mb-0">Scanned Item & Provenance</h6>
+            <small class="small-muted">Scan a QR to load on-chain history</small>
+          </div>
+          <div class="card-body">
+            <div id="provenanceContent">
+              <p class="text-muted">No batch scanned yet. Use the <strong>Scan QR</strong> button or paste a Batch ID below.</p>
+              <div class="input-group mb-3 w-50">
+                <input id="batchInput" class="form-control" placeholder="Paste Batch ID or CID" />
+                <button id="loadBatchBtn" class="btn btn-outline-success">Load</button>
+              </div>
+              <pre id="batchJson" class="bg-light p-3 rounded" style="display:none; max-height:300px; overflow:auto;"></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+
+<!-- QR Modal -->
+<div class="modal fade" id="qrModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">QR Scanner</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="qr-reader" class="qr-preview mb-3"></div>
+        <p class="small-muted">Allow camera access. Works on HTTPS or localhost.</p>
+        <div id="qrResultText" class="alert d-none"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="stopQr" class="btn btn-secondary">Stop</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// ---- Sample in-memory data (replace with real backend / blockchain calls) ----
+const participants = [
+  {name:'Raj Farmer', role:'Farmer', id:'0xFA1...', batches:['BATCH-001','BATCH-025'], last:'2025-09-20'},
+  {name:'Kumar Distributor', role:'Distributor', id:'0xD12...', batches:['BATCH-001'], last:'2025-09-21'},
+  {name:'Anita Retailer', role:'Retailer', id:'0xR99...', batches:['BATCH-025'], last:'2025-09-22'},
+  {name:'LogiTrans Pvt', role:'Transporter', id:'0xT44...', batches:['BATCH-001','BATCH-010'], last:'2025-09-23'},
+  {name:'Inspector', role:'Verifier', id:'0xV07...', batches:[], last:'2025-09-19'},
+];
+
+const transfers = [
+  {batch:'BATCH-001', from:'Raj Farmer', to:'Kumar Distributor', time:'2025-09-21 10:12'},
+  {batch:'BATCH-001', from:'Kumar Distributor', to:'LogiTrans Pvt', time:'2025-09-21 15:22'},
+  {batch:'BATCH-025', from:'Raj Farmer', to:'Anita Retailer', time:'2025-09-22 11:02'},
+];
+
+// ---- UI population ----
+function populateParticipants(){
+  const tbody = document.querySelector('#participantsTable tbody');
+  tbody.innerHTML='';
+  participants.forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${p.name}</td>
+      <td>${p.role}</td>
+      <td><code>${p.id}</code></td>
+      <td>${p.batches.join(', ') || '-'}</td>
+      <td>${p.last}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function populateTransfers(){
+  const ul = document.getElementById('transferList');
+  ul.innerHTML='';
+  transfers.slice().reverse().forEach(t => {
+    const li = document.createElement('li');
+    li.className='list-group-item';
+    li.innerHTML = <strong>${t.batch}</strong> — ${t.from} → ${t.to} <span class='small-muted float-end'>${t.time}</span>;
+    ul.appendChild(li);
+  });
+}
+
+populateParticipants();
+populateTransfers();
+
+// ---- Search ----
+document.getElementById('searchBtn').addEventListener('click', ()=>{
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const tbody = document.querySelector('#participantsTable tbody');
+  tbody.innerHTML='';
+  const results = participants.filter(p => (
+    p.name.toLowerCase().includes(q) ||
+    p.role.toLowerCase().includes(q) ||
+    p.id.toLowerCase().includes(q) ||
+    p.batches.join(' ').toLowerCase().includes(q)
+  ));
+  if(results.length===0){
+    tbody.innerHTML = <tr><td colspan='5' class='text-muted'>No results</td></tr>;
+  } else {
+    results.forEach(p=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${p.name}</td>
+        <td>${p.role}</td>
+        <td><code>${p.id}</code></td>
+        <td>${p.batches.join(', ') || '-'}</td>
+        <td>${p.last}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+});
+
+// ---- Load batch (mock provenance view) ----
+document.getElementById('loadBatchBtn').addEventListener('click', ()=>{
+  const id = document.getElementById('batchInput').value.trim();
+  if(!id) return alert('Enter a Batch ID or paste the scanned QR payload');
+
+  // mock: find transfers for batch
+  const hist = transfers.filter(t => t.batch.toLowerCase()===id.toLowerCase());
+  const obj = { batchId: id, provenance: hist };
+  document.getElementById('batchJson').style.display='block';
+  document.getElementById('batchJson').textContent = JSON.stringify(obj, null, 2);
+});
+
+// ---- QR Scanner using html5-qrcode ----
+let html5QrCode;
+const qrModal = new bootstrap.Modal(document.getElementById('qrModal'));
+
+document.getElementById('openQrBtn').addEventListener('click', ()=>{
+  qrModal.show();
+  startQrScanner();
+});
+
+async function startQrScanner(){
+  const qrRegionId = "qr-reader";
+  html5QrCode = new Html5Qrcode(qrRegionId);
+  const config = { fps: 10, qrbox: {width:250, height:250} };
+  try{
+    await html5QrCode.start({ facingMode: "environment" }, config, qrCodeMessage => {
+      // QR code scanned
+      document.getElementById('qrResultText').classList.remove('d-none');
+      document.getElementById('qrResultText').classList.add('alert-success');
+      document.getElementById('qrResultText').textContent = Scanned: ${qrCodeMessage};
+      // Auto load into provenance
+      document.getElementById('batchInput').value = qrCodeMessage;
+      document.getElementById('loadBatchBtn').click();
+      // stop scanner after scan
+      stopQrScanner();
+    });
+  }catch(err){
+    console.error('QR start error', err);
+    document.getElementById('qrResultText').classList.remove('d-none');
+    document.getElementById('qrResultText').classList.add('alert-danger');
+    document.getElementById('qrResultText').textContent = 'Could not access camera. Try localhost or HTTPS.';
+  }
+}
+
+function stopQrScanner(){
+  if(html5QrCode){
+    html5QrCode.stop().then(()=>{
+      html5QrCode.clear();
+    }).catch(()=>{});
+  }
+}
+
+document.getElementById('stopQr').addEventListener('click', ()=>{
+  stopQrScanner();
+});
+
+// ---- Wallet connect placeholder (ethers.js) ----
+document.getElementById('connectWalletBtn').addEventListener('click', async ()=>{
+  if(window.ethereum){
+    try{
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const addr = accounts[0];
+      document.getElementById('connectWalletBtn').textContent = addr.slice(0,6) + '...' + addr.slice(-4);
+      // set network name if available
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const net = await provider.getNetwork();
+      document.getElementById('networkName').textContent = net.name || net.chainId;
+    }catch(e){ console.error(e); alert('Wallet connection rejected'); }
+  } else {
+    alert('No Web3 wallet found. Install MetaMask or use WalletConnect.');
+  }
+});
+
+</script>
+
+</body>
+</html>
