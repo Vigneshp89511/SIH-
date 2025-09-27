@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Allerta+Stencil&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Staatliches&display=swap');
+.Info{
+    position: absolute;
+    width: 55%;
+    padding: 40px;
+    border-radius: 10px;
+    top:23%;
+    right:6.2%;
+    background: rgba(255, 255, 255, 0.37);
+}
+.Info_Head{
+    font-size: 46pt;
+    font-family: "Allerta Stencil", sans-serif;
+ 
+}
+.Info_body{
+   font-size: 20pt;
+   font-family: "Staatliches", sans-serif;
+   text-align: justify;
+}
+
+@media (max-height:600px)
+{
+    .Info_body{
+   font-size: 14pt;
+   }
+}
+
+@media (max-width:500px)
+{
+    .Info{
+    width: 88%;
+    padding: 22px;
+    top: 14%;
+    }
+    .Info_body {
+    font-size: 17pt;
+    }
+    .Info_Head {
+    font-size: 31pt;
+    padding-bottom: 10px;
+    }
+}    

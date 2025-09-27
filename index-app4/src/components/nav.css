@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=New+Rocker&family=Style+Script&family=TASA+Explorer:wght@400..800&display=swap');
+
+
+.Nav{
+font-family: "Style Script", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+.Nav_left{
+
+}
+.Nav_left img{
+   width:13%;
+   border-radius: 50%;
+   margin-left:8.8%;
+   margin-top: 5.8%;
+}
+.Nav_right{
+    position: absolute;
+    top:6%;
+    right: 3%;
+    width: 60%;
+    height: 7%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    border-radius: 30px;
+    background: linear-gradient(45deg,rgba(175, 175, 175, 0.461),transparent) ;
+    cursor: pointer;
+}
+
+.Nav_search {
+    position:relative;
+}
+
+.Nav_search input{
+    border: none;
+    width: 100%;
+    height: 30px;
+    border-radius: 20px;
+    padding-left: 20px;
+}
+
+.Nav_search span{
+   position:absolute;
+   right: 2%;
+   top:10%;
+}
+
+.Nav_right h2{
+    width: 130px;
+    text-align: center;
+    border-radius: 20px;
+    transition: 0.3s ease-in-out;
+}
+
+.Nav_right h2:hover{
+    box-shadow: 1px 2px 1px greenyellow;
+}
+
+.Nav_background_vedio{
+    position:absolute;
+    top:0;
+    object-fit: cover;
+    width: 100vw;
+    height: 100vh;
+    z-index: -999;
+}
+
+.Nav_only_left{
+    width: 32%;
+    height:100vh;
+    position: absolute;
+    top:0;
+    z-index: -10;
+    background-color: rgba(59, 59, 59, 0.578);
+}
+
+@media (max-width:500px)
+{
+    .Nav_right{
+    font-size: 5pt;
+    top: 3%;
+    height: 3%;
+    right: 6%;
+    width: 63%;
+    }
+    .Nav_search input {
+    width: 100%;
+    height: 15px;
+    padding-left: 4px;
+    font-size: 7pt;
+    }
+    .Nav_only_left{
+        display:none;
+    }
+   .Nav_background_vedio{
+    position: fixed;
+   }   
+   .Nav_search span {
+    top: 21%;
+   }
+    
+}

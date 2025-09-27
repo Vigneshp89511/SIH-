@@ -1,0 +1,58 @@
+.Player{
+
+}
+
+.Player_img{
+    width:23%;
+    position:absolute;
+    left:4.5%;
+    top:50%;
+    border-radius: 20px;
+    margin-bottom: 0px;
+}
+ 
+.Player_title{
+    position:absolute;
+    top:100px;
+    left:600px;
+}
+
+.Player_left{
+    position:absolute;
+    top:50%;
+    margin-top:7.8%;
+    left:1.2%;
+    width: 2%;
+    border-radius: 50%;
+    transform: rotate(180deg);    
+}
+
+.Player_right{
+    position:absolute;
+    top:50%;
+    margin-top:7.8%;
+    left: 28.6%;
+    width: 2%;
+    border-radius: 50%;
+    
+}
+
+@media (max-width:500px)
+{
+    .Player_img {    
+    width: 75%;
+    left: 13.3%;
+    top:900px;
+    
+    }
+
+    .Player_left {
+    top: 981px;
+    width: 8%;
+    }
+    .Player_right {
+    top: 981px;
+    width: 8%;
+    left: 90.6%;
+    }
+}

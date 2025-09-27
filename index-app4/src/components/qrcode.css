@@ -1,0 +1,91 @@
+ .qrcode {
+  max-width: 350px;
+  margin: 10px;
+  padding: 1rem;
+  background-color: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.qrcode h2.info-heading {
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 1.75rem;
+}
+
+.qrcode small {
+  display: block;
+  margin-bottom: 1.5rem;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.qrcode img {
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.qrcode img:hover {
+  transform: scale(1.1);
+}
+
+.startcam {
+  margin-bottom: 1.5rem;
+  background-color: #e0f7fa;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #00796b;
+}
+
+.startcam h1 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.qrcode input[type="text"] {
+  width: 100%;
+  padding: 0.7rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.qrcode input[type="text"]:focus {
+  border-color: #00bcd4;
+  outline: none;
+}
+
+.qrcode button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #00bcd4;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.qrcode button:hover {
+  background-color: #008c9e;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .qrcode {
+    padding: 1.5rem;
+  }
+
+  .startcam h1 {
+    font-size: 1rem;
+  }
+
+  .qrcode button {
+    width: 100%;
+  }
+}
