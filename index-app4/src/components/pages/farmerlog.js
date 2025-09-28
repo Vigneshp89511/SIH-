@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-// Move CSS into a separate file for clarity
+ import React, { useState } from "react";
+import video from '../../assets/152740-803732906.mp4'
+import { useNavigate } from 'react-router-dom'
 import './farmerlog.css'
+
 export default function FarmerRegistrationForm() {
   const [formData, setFormData] = useState({
     name: "",
@@ -18,6 +20,7 @@ export default function FarmerRegistrationForm() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const navigation = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -37,7 +40,6 @@ export default function FarmerRegistrationForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Required fields validation
     if (
       !formData.name ||
       !formData.phone ||
@@ -59,8 +61,14 @@ export default function FarmerRegistrationForm() {
   if (submitted) {
     return (
       <div className="container">
+        <div className="background-video">
+          <video className="Nav_background_vedio" loop autoPlay muted playsInline>
+            <source src={video} type="video/mp4" />
+          </video>
+        </div>
+
         <div className="success-message">
-          ✅ Thank you! Your registration has been submitted successfully.
+          ✅ Thank you! Your registration has been submitted successfully. <span onClick={() => navigation("/")} style={{ color: "red", cursor: "pointer" }}>click me</span> to go home page.
         </div>
       </div>
     );
@@ -68,6 +76,12 @@ export default function FarmerRegistrationForm() {
 
   return (
     <div className="container">
+      <div className="background-video">
+        <video className="Nav_background_vedio" loop autoPlay muted playsInline>
+          <source src={video} type="video/mp4" />
+        </video>
+      </div>
+
       <div className="header">
         <h1>🌾 Farmer Registration</h1>
         <p>Join Blockchain Supply Chain</p>
@@ -79,10 +93,11 @@ export default function FarmerRegistrationForm() {
           <h3>👤 Basic Information</h3>
           <div className="form-row">
             <div className="form-group">
-              <label>
+              <label htmlFor="name">
                 Name <span className="required">*</span>
               </label>
               <input
+                id="name"
                 type="text"
                 name="name"
                 value={formData.name}
@@ -91,10 +106,11 @@ export default function FarmerRegistrationForm() {
               />
             </div>
             <div className="form-group">
-              <label>
+              <label htmlFor="phone">
                 Phone <span className="required">*</span>
               </label>
               <input
+                id="phone"
                 type="tel"
                 name="phone"
                 value={formData.phone}
@@ -104,10 +120,11 @@ export default function FarmerRegistrationForm() {
             </div>
           </div>
           <div className="form-group">
-            <label>
+            <label htmlFor="address">
               Village/Address <span className="required">*</span>
             </label>
             <input
+              id="address"
               type="text"
               name="address"
               value={formData.address}
@@ -121,10 +138,11 @@ export default function FarmerRegistrationForm() {
         <div className="section">
           <h3>🚜 Farm Details</h3>
           <div className="form-group">
-            <label>
+            <label htmlFor="farmSize">
               Farm Size <span className="required">*</span>
             </label>
             <select
+              id="farmSize"
               name="farmSize"
               value={formData.farmSize}
               onChange={handleChange}
@@ -147,12 +165,13 @@ export default function FarmerRegistrationForm() {
                   <div className="checkbox-item" key={crop}>
                     <input
                       type="checkbox"
+                      id={`crops-${crop}`}
                       name="crops"
                       value={crop}
                       checked={formData.crops.includes(crop)}
                       onChange={handleChange}
                     />
-                    <label>{crop}</label>
+                    <label htmlFor={`crops-${crop}`}>{crop}</label>
                   </div>
                 )
               )}
@@ -166,12 +185,13 @@ export default function FarmerRegistrationForm() {
                 <div className="radio-item" key={option}>
                   <input
                     type="radio"
+                    id={`organic-${option}`}
                     name="organic"
                     value={option}
                     checked={formData.organic === option}
                     onChange={handleChange}
                   />
-                  <label>{option}</label>
+                  <label htmlFor={`organic-${option}`}>{option}</label>
                 </div>
               ))}
             </div>
@@ -183,10 +203,11 @@ export default function FarmerRegistrationForm() {
           <h3>📱 Technology</h3>
           <div className="form-row">
             <div className="form-group">
-              <label>
+              <label htmlFor="smartphone">
                 Have Smartphone? <span className="required">*</span>
               </label>
               <select
+                id="smartphone"
                 name="smartphone"
                 value={formData.smartphone}
                 onChange={handleChange}
@@ -198,8 +219,9 @@ export default function FarmerRegistrationForm() {
               </select>
             </div>
             <div className="form-group">
-              <label>Internet Access?</label>
+              <label htmlFor="internet">Internet Access?</label>
               <select
+                id="internet"
                 name="internet"
                 value={formData.internet}
                 onChange={handleChange}
@@ -225,12 +247,13 @@ export default function FarmerRegistrationForm() {
                 <div className="checkbox-item" key={sell}>
                   <input
                     type="checkbox"
+                    id={`sellTo-${sell}`}
                     name="sellTo"
                     value={sell}
                     checked={formData.sellTo.includes(sell)}
                     onChange={handleChange}
                   />
-                  <label>{sell}</label>
+                  <label htmlFor={`sellTo-${sell}`}>{sell}</label>
                 </div>
               ))}
             </div>
@@ -248,12 +271,13 @@ export default function FarmerRegistrationForm() {
                 <div className="checkbox-item" key={problem.value}>
                   <input
                     type="checkbox"
+                    id={`problems-${problem.value}`}
                     name="problems"
                     value={problem.value}
                     checked={formData.problems.includes(problem.value)}
                     onChange={handleChange}
                   />
-                  <label>{problem.label}</label>
+                  <label htmlFor={`problems-${problem.value}`}>{problem.label}</label>
                 </div>
               ))}
             </div>
@@ -277,12 +301,13 @@ export default function FarmerRegistrationForm() {
                 <div className="checkbox-item" key={want.value}>
                   <input
                     type="checkbox"
+                    id={`wants-${want.value}`}
                     name="wants"
                     value={want.value}
                     checked={formData.wants.includes(want.value)}
                     onChange={handleChange}
                   />
-                  <label>{want.label}</label>
+                  <label htmlFor={`wants-${want.value}`}>{want.label}</label>
                 </div>
               ))}
             </div>
@@ -299,12 +324,13 @@ export default function FarmerRegistrationForm() {
                 <div className="radio-item" key={learn.value}>
                   <input
                     type="radio"
+                    id={`learning-${learn.value}`}
                     name="learning"
                     value={learn.value}
                     checked={formData.learning === learn.value}
                     onChange={handleChange}
                   />
-                  <label>{learn.label}</label>
+                  <label htmlFor={`learning-${learn.value}`}>{learn.label}</label>
                 </div>
               ))}
             </div>

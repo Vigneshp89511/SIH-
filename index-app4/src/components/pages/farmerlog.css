@@ -1,4 +1,12 @@
 /* FarmerForm.css */
+.background-video{
+    object-fit:cover;
+    position: fixed;
+    margin-top:-65px ;
+    margin-left: -398px;
+    z-index: -1;
+
+}
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -57,6 +65,7 @@ body {
 /* Labels & Required */
 label {
   display: block;
+  cursor: pointer;
   font-weight: 600;
   margin-bottom: 6px;
   color: #333;
@@ -115,6 +124,7 @@ input[type="checkbox"],
 input[type="radio"] {
   transform: scale(1.1);
   accent-color: #2d6a4f;
+  cursor: pointer;
 }
 
 /* Submit Button */

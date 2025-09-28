@@ -1,6 +1,6 @@
 .login-box {
   position: absolute;
-  top:0;
+  top:-10px;
   right: 50px;
   width: 350px;
   margin: 80px auto;
